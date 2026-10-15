@@ -1,4 +1,4 @@
-// Credenciales de Supabase
+
 const SUPABASE_URL = 'https://wvbmmhnmqzsdqdioczbe.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind2Ym1taG5tcXpzZHFkaW9jemJlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTExNDkyNzcsImV4cCI6MjEwNjcyNTI3N30.4tbsLLGvbvjbc-LnxUNDrjtO7P92hiW-fae4t9RRez4';
 
