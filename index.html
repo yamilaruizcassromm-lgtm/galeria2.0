@@ -5,19 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Galería Privada - Supabase</title>
     <link rel="stylesheet" href="style.css">
-    <!-- SDK Global de Supabase UMD (Compatible con GitHub Pages) -->
+    <!-- SDK Global de Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
     <div class="container">
         <h1>Galería de Imágenes Privada</h1>
         
-        <!-- Estado de sesión -->
         <div id="auth-section">
             <p id="user-status">Conectando con Supabase...</p>
         </div>
 
-        <!-- Sección de Subida -->
         <div id="upload-section">
             <h2>Subir Nueva Imagen</h2>
             <input type="file" id="file-input" accept="image/*">
@@ -25,14 +23,13 @@
             <p id="upload-msg"></p>
         </div>
 
-        <!-- Sección de Galería -->
         <div id="gallery-section">
             <h2>Mis Imágenes Guardadas</h2>
             <div id="gallery-grid" class="grid"></div>
         </div>
     </div>
 
-    <!-- Archivo JavaScript principal -->
+    <!-- ÚNICA etiqueta para tu app.js -->
     <script src="app.js"></script>
 </body>
 </html>
