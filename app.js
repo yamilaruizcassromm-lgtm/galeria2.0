@@ -2,9 +2,9 @@
 const SUPABASE_URL = 'https://wvbmmhnmqzsdqdioczbe.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind2Ym1taG5tcXpzZHFkaW9jemJlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTExNDkyNzcsImV4cCI6MjEwNjcyNTI3N30.4tbsLLGvbvjbc-LnxUNDrjtO7P92hiW-fae4t9RRez4';
 
-const supabase = window.supabase.createClient(https://wvbmmhnmqzsdqdioczbe.supabase.co/rest/v1/, eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind2Ym1taG5tcXpzZHFkaW9jemJlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTExNDkyNzcsImV4cCI6MjEwNjcyNTI3N30.4tbsLLGvbvjbc-LnxUNDrjtO7P92hiW-fae4t9RRez4);
+// Usamos supabaseClient para evitar conflictos con la librería global
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-// Seleccionar elementos del DOM
 const fileInput = document.getElementById("file-input");
 const uploadBtn = document.getElementById("upload-btn");
 const uploadMsg = document.getElementById("upload-msg");
@@ -13,12 +13,11 @@ const userStatus = document.getElementById("user-status");
 
 let currentUser = null;
 
-// Verificar sesión activa o iniciar anónimamente al cargar la página
 document.addEventListener("DOMContentLoaded", async () => {
-    let { data: { session } } = await supabase.auth.getSession();
+    let { data: { session } } = await supabaseClient.auth.getSession();
     
     if (!session) {
-        const { data: anonData, error: anonError } = await supabase.auth.signInAnonymously();
+        const { data: anonData, error: anonError } = await supabaseClient.auth.signInAnonymously();
         if (!anonError) {
             session = anonData.session;
         }
@@ -33,7 +32,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 });
 
-// Botón para subir imagen a Supabase Storage y registrarla en la base de datos
 uploadBtn.addEventListener("click", async () => {
     const file = fileInput.files[0];
     
@@ -57,22 +55,19 @@ uploadBtn.addEventListener("click", async () => {
 
         const filePath = `usuarios/${currentUser.id}/${Date.now()}_${file.name}`;
         
-        // Subir al Storage
-        const { data: storageData, error: storageError } = await supabase.storage
+        const { error: storageError } = await supabaseClient.storage
             .from('galeria')
             .upload(filePath, file);
 
         if (storageError) throw storageError;
 
-        // Obtener URL pública
-        const { data: urlData } = supabase.storage
+        const { data: urlData } = supabaseClient.storage
             .from('galeria')
             .getPublicUrl(filePath);
 
         const imageUrl = urlData.publicUrl;
 
-        // Guardar registro en la tabla SQL 'galeria_imagenes'
-        const { error: dbError } = await supabase
+        const { error: dbError } = await supabaseClient
             .from('galeria_imagenes')
             .insert([
                 { 
@@ -98,14 +93,13 @@ uploadBtn.addEventListener("click", async () => {
     }
 });
 
-// Función para cargar y listar las imágenes del usuario desde Supabase
 async function cargarGaleria() {
     galleryGrid.innerHTML = "";
 
     if (!currentUser) return;
 
     try {
-        const { data: imagenes, error } = await supabase
+        const { data: imagenes, error } = await supabaseClient
             .from('galeria_imagenes')
             .select('*')
             .eq('user_id', currentUser.id)
